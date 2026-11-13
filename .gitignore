@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Entorno virtual
+venv/
+.venv/
+env/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# Secretos y credenciales (Unidad 2: nunca se versionan)
+.env
+
+# Editores y sistema
+# .vscode/* se ignora EXCEPTO la configuración compartida del proyecto
+# (depuración F5 y extensiones recomendadas), que funciona igual en VS
+# Code local y en GitHub Codespaces.
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
