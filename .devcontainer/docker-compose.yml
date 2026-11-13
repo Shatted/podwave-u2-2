@@ -1,0 +1,39 @@
+# PodWave — entorno de desarrollo para GitHub Codespaces.
+#
+# app : contenedor de desarrollo (Python 3.12 + utilidades de VS Code).
+# db  : MySQL 8 con la base `podwave`, el usuario `podwave_user` y el
+#       grant de pruebas (init.sql) para `python manage.py test`.
+#
+# Las credenciales de este archivo son DESECHABLES y solo para el entorno
+# de desarrollo del contenedor (no son secretos del proyecto): la
+# aplicación sigue leyendo TODA su configuración desde `.env`, que se
+# genera al crear el codespace y jamás se sube al repositorio.
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/python:3.12
+    volumes:
+      - ..:/workspaces/${localWorkspaceFolderBasename}:cached
+    command: sleep infinity
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_clave_dev
+      MYSQL_DATABASE: podwave
+      MYSQL_USER: podwave_user
+      MYSQL_PASSWORD: podwave_dev
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  mysql-data:
