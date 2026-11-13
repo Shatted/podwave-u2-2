@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if is_edit %}Editar lista{% else %}Crear lista{% endif %} — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      {# ---------- Formulario crear/editar lista (U2-2) ---------- #}
+      <div class="card podwave-card playlist-form">
+        <div class="card-body p-4">
+          <header class="mb-4">
+            <h1 class="section-title mb-1">
+              {% if is_edit %}Editar lista{% else %}Crear nueva lista{% endif %}
+            </h1>
+            <p class="text-muted mb-0">
+              {% if is_edit %}
+                Modifica el nombre o la descripción. Las pistas de la lista se
+                administran desde su página de detalle (agregar, quitar y
+                reordenar).
+              {% else %}
+                Define el nombre de tu lista; después podrás agregarle pistas
+                desde la biblioteca y ordenarlas como prefieras.
+              {% endif %}
+            </p>
+          </header>
+
+          {# Método POST + {% csrf_token %}: protección CSRF de Django (Unidad 2). #}
+          {# Sin multipart: el formulario no incluye archivos. #}
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <footer class="d-flex gap-2 mt-4">
+              {# Renderizado condicional: cambia el texto según crear/editar #}
+              <button type="submit" class="btn btn-accent">
+                {% if is_edit %}Guardar cambios{% else %}Crear lista{% endif %}
+              </button>
+              <a href="{% if is_edit %}{% url 'playlist_detail' form.instance.pk %}{% else %}{% url 'playlist_list' %}{% endif %}"
+                 class="btn btn-ghost">Cancelar</a>
+            </footer>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

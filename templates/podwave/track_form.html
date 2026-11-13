@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if is_edit %}Editar pista{% else %}Agregar pista{% endif %} — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      {# ---------- Formulario crear/editar (equivale a TrackForm.jsx) ---------- #}
+      <div class="card podwave-card track-form">
+        <div class="card-body p-4">
+          <header class="mb-4">
+            <h1 class="section-title mb-1">
+              {% if is_edit %}Editar pista{% else %}Agregar nueva pista{% endif %}
+            </h1>
+            <p class="text-muted mb-0">
+              {% if is_edit %}
+                Modifica los campos y guarda los cambios.
+              {% else %}
+                Completa los datos para añadir un podcast a tu biblioteca.
+              {% endif %}
+            </p>
+          </header>
+
+          {# Guía de la fuente de audio: archivo local (recomendado) o URL #}
+          <div class="source-hint mb-3">
+            <p class="mb-1"><strong>¿Cómo quieres agregar el audio?</strong></p>
+            <p class="mb-0 small text-muted">
+              <span class="text-accent">Opción 1 (recomendada):</span> sube un archivo desde tu
+              computador (.mp3, .wav, .ogg, .m4a, .flac, hasta 20&nbsp;MB) — se reproduce localmente,
+              sin demora.<br>
+              <span class="text-accent">Opción 2:</span> pega la URL http(s):// de un archivo de
+              audio alojado en internet. Al menos una de las dos es obligatoria.
+            </p>
+          </div>
+
+          {# Método POST + {% csrf_token %}: protección CSRF de Django (Unidad 2).
+             enctype multipart: necesario para SUBIR ARCHIVOS de audio. #}
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <footer class="d-flex gap-2 mt-4">
+              {# Renderizado condicional: cambia el texto según crear/editar #}
+              <button type="submit" class="btn btn-accent">
+                {% if is_edit %}Guardar cambios{% else %}Agregar pista{% endif %}
+              </button>
+              <a href="{% if is_edit %}{% url 'track_detail' form.instance.pk %}{% else %}{% url 'track_list' %}{% endif %}"
+                 class="btn btn-ghost">Cancelar</a>
+            </footer>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

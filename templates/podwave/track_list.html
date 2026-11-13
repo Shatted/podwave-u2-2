@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Biblioteca — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+  {# ---------- Encabezado de la biblioteca ---------- #}
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <p class="hero-eyebrow mb-1">Biblioteca</p>
+      <h1 class="section-title mb-1">Tus pistas <span class="text-accent">({{ total_tracks }})</span></h1>
+      <p class="text-muted mb-0">
+        {% if total_genres %}{{ total_genres }} género(s) distinto(s) &middot; ordenadas por fecha{% endif %}
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      {% if user.is_authenticated %}
+        <a href="{% url 'track_create' %}" class="btn btn-accent">+ Agregar pista</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'track_create' %}" class="btn btn-accent">
+          Inicia sesión para agregar
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ---------- Filtro por género (tabla Genre normalizada via contexto, U2) ---------- #}
+  <div class="genre-filter mb-4" role="group" aria-label="Filtrar por género">
+    <span class="text-muted small me-2">Filtrar por género:</span>
+    <a href="{% url 'track_list' %}"
+       class="badge genre-chip {% if not genero_activo %}genre-chip-active{% endif %}">Todos</a>
+    {% for g in generos %}
+      <a href="?genero={{ g.slug }}"
+         class="badge genre-chip {% if genero_activo == g.slug %}genre-chip-active{% endif %}">{{ g.name }}</a>
+    {% endfor %}
+    {# Resumen por género: función de Python (iteración + decisión) via contexto #}
+    {% if resumen_generos %}
+      <span class="text-muted small ms-2 d-none d-md-inline">
+        &middot;
+        {% for genero, cantidad in resumen_generos %}{{ genero }}: {{ cantidad }}{% if not forloop.last %} · {% endif %}{% endfor %}
+      </span>
+    {% endif %}
+  </div>
+
+  {# ---------- Lista de pistas (equivalente a TrackList.jsx) ---------- #}
+  {% if tracks %}
+    <div class="row g-3">
+      {% for track in tracks %}
+        <div class="col-md-6 col-lg-4">
+          <div class="track-card h-100">
+            <div class="track-thumb" aria-hidden="true">{{ track.title|slice:":1"|upper }}</div>
+            <div class="track-body">
+              <h2 class="track-title" title="{{ track.title }}">
+                <a href="{% url 'track_detail' track.pk %}" class="track-link">{{ track.title }}</a>
+              </h2>
+              <p class="track-artist mb-1" title="{{ track.artist }}">{{ track.artist }}</p>
+              <span class="track-genre">{{ track.genre }}</span>
+            </div>
+            <div class="track-actions">
+              <button type="button" class="btn btn-accent btn-sm btn-play"
+                      data-url="{{ track.audio_url }}" data-title="{{ track.title }}"
+                      data-artist="{{ track.artist }}"
+                      aria-label="Reproducir {{ track.title }}">
+                &#9654; Reproducir
+              </button>
+              <a href="{% url 'track_detail' track.pk %}" class="btn btn-ghost btn-sm">Detalle</a>
+              {# U2-2: editar/eliminar solo el dueño de la pista (o superusuario); #}
+              {# las vistas lo vuelven a verificar en el servidor. #}
+              {% if user.is_superuser or track.created_by == user %}
+                <a href="{% url 'track_update' track.pk %}" class="btn btn-ghost btn-sm"
+                   aria-label="Editar {{ track.title }}">&#9998; Editar</a>
+                <a href="{% url 'track_delete' track.pk %}" class="btn btn-danger btn-sm"
+                   aria-label="Eliminar {{ track.title }}">&#128465; Eliminar</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        {# Renderizado condicional: estado vacío como en la SPA original #}
+        <div class="col-12">
+          <div class="empty-state">
+            <p class="empty-icon" aria-hidden="true">&#9835;</p>
+            <h2>Lista vacía: agrega tu primera pista</h2>
+            <p class="text-muted">La biblioteca aún no tiene pistas.</p>
+            <a href="{% url 'track_create' %}" class="btn btn-accent">Agregar la primera pista</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# ---------- Paginación (ListView, Unidad 2) ---------- #}
+    {% if is_paginated %}
+      <nav aria-label="Paginación de la biblioteca" class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1">&laquo; Primera</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+          {% endif %}
+          <li class="page-item active">
+            <span class="page-link">Página {{ page_obj.number }} de {{ paginator.num_pages }}</span>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginator.num_pages }}">Última &raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="empty-state">
+      <p class="empty-icon" aria-hidden="true">&#9835;</p>
+      <h2>Lista vacía: agrega tu primera pista</h2>
+      <p class="text-muted">La biblioteca aún no tiene pistas.</p>
+      <a href="{% url 'track_create' %}" class="btn btn-accent">Agregar la primera pista</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

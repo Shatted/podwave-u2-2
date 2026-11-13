@@ -1,0 +1,158 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PodWave — Streaming de podcasts{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+  <!-- Bootstrap 5 (base del proyecto plantilla + Unidad 2) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous">
+  <!-- Tema oscuro PodWave (static files a nivel de proyecto, Unidad 2) -->
+  <link rel="stylesheet" href="{% static 'css/podwave.css' %}?v=3">
+</head>
+<body class="podwave-body">
+
+  {# ---------- Navbar (equivale al componente Navbar.jsx de la SPA) ---------- #}
+  <nav class="navbar navbar-expand-lg podwave-navbar sticky-top">
+    <div class="container">
+      <a class="navbar-brand podwave-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+        <span class="brand-icon" aria-hidden="true">&#9834;</span>
+        <span>Pod<span class="text-accent">Wave</span></span>
+        <span class="badge podwave-badge">{{ total_tracks|default:0 }} pistas</span>
+      </a>
+      <button class="navbar-toggler podwave-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#podwaveNav"
+              aria-controls="podwaveNav" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="podwaveNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'track_list' %}">Biblioteca</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'playlist_list' %}">Listas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">Acerca de</a>
+          </li>
+          {% if user.is_authenticated %}
+            {# Sesión iniciada: crear pista y cerrar sesión (Unidad 2) #}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'track_create' %}">+ Agregar pista</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button"
+                 data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="user-dot" aria-hidden="true">&#128100;</span> {{ user.username }}
+              </a>
+              <ul class="dropdown-menu podwave-dropdown dropdown-menu-lg-end">
+                <li><h6 class="dropdown-header">Sesión iniciada</h6></li>
+                <li><a class="dropdown-item" href="{% url 'track_create' %}">Nueva pista</a></li>
+                <li><a class="dropdown-item" href="{% url 'playlist_create' %}">Nueva lista</a></li>
+                <li><a class="dropdown-item" href="{% url 'playlist_list' %}">Mis listas y las públicas</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  {# Django 5 exige POST para cerrar sesión (LogoutView rechaza GET) #}
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item text-danger">Cerrar sesión</button>
+                  </form>
+                </li>
+              </ul>
+            </li>
+          {% else %}
+            {# Sin sesión: iniciar sesión o registrarse (Unidad 2) #}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-accent btn-sm ms-lg-2" href="{% url 'signup' %}">Registrarse</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {# ---------- Mensajes del framework `messages` (U2-2) ---------- #}
+  {# Retroalimentación de las operaciones CRUD: confirmaciones y errores.
+     MESSAGE_TAGS (settings.py) alinea las etiquetas de Django con las #}
+  {# clases de Bootstrap (error -> danger). #}
+  {% if messages %}
+    <div class="container mt-3" aria-live="polite" aria-label="Mensajes del sistema">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# ---------- Contenido (bloque que heredan las plantillas hijas) ---------- #}
+  <main class="podwave-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ---------- Pie de página ---------- #}
+  <footer class="podwave-footer">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span>&#127911; PodWave — Servicio de streaming de audio (podcasts)</span>
+      <span class="text-muted">Programación Back End (TI2041) · Django 5.2</span>
+    </div>
+  </footer>
+
+  {# ---------- Player fijo (equivale al componente Player.jsx) ---------- #}
+  <footer id="podwave-player" class="podwave-player" hidden role="region" aria-label="Reproductor de audio">
+    <div class="container">
+      <div class="player-inner">
+        <div class="player-info">
+          <div class="player-thumb" aria-hidden="true">&#9834;</div>
+          <div class="player-meta">
+            <p class="player-title" id="player-title">—</p>
+            <p class="player-artist" id="player-artist">—</p>
+          </div>
+        </div>
+        <div class="player-controls">
+          <button type="button" class="player-btn player-btn-play" id="player-toggle"
+                  aria-label="Reproducir">&#9654;</button>
+          <div class="player-progress">
+            <span class="player-time" id="player-current">00:00</span>
+            <div class="player-bar" aria-hidden="true">
+              <div class="player-bar-fill" id="player-bar-fill"></div>
+            </div>
+            <span class="player-time" id="player-duration">00:00</span>
+          </div>
+        </div>
+        <button type="button" class="player-btn player-btn-close" id="player-close"
+                aria-label="Cerrar reproductor" title="Cerrar">&#10005;</button>
+      </div>
+      {# Aviso cuando el navegador pausa la reproducción al navegar
+         (política de autoplay). Etiqueta FLOTANTE por encima del player:
+         nunca ocupa espacio ni aplasta la barra de progreso.
+         Se muestra/oculta desde player.js. #}
+      <button type="button" class="player-hint" id="player-hint" hidden>
+        &#9654; Haz clic para continuar el audio
+      </button>
+      {# preload=auto: el audio se pre-carga mientras el usuario lee la
+         página para que la reproducción continúe de inmediato al navegar #}
+      <audio id="podwave-audio" preload="auto"></audio>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS bundle + JS del reproductor (static files, Unidad 2) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+          crossorigin="anonymous"></script>
+  <script src="{% static 'js/player.js' %}?v=3"></script>
+</body>
+</html>

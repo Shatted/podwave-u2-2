@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar lista — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card podwave-card border-danger-subtle">
+        <div class="card-body p-4 text-center">
+          <p class="empty-icon text-danger" aria-hidden="true">&#9888;</p>
+          <h1 class="section-title mb-2">Eliminar lista</h1>
+          <p class="mb-1">
+            ¿Eliminar la lista <strong>&laquo;{{ playlist.name }}&raquo;</strong>
+            de <strong>{{ playlist.owner.username }}</strong>?
+          </p>
+          <p class="text-muted small mb-4">
+            Esta acción no se puede deshacer. Se borran la lista y sus
+            {{ playlist.pistas.count }} enlaces con pistas
+            ({{ playlist.pistas.count|pluralize:"pista,pistas" }} de la tabla intermedia);
+            las pistas en sí <strong>siguen disponibles en la biblioteca</strong>.
+          </p>
+
+          {# Confirmación antes de eliminar (criterio 5 de la Rúbrica A) #}
+          <form method="post" class="d-flex justify-content-center gap-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a href="{% url 'playlist_detail' playlist.pk %}" class="btn btn-ghost">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

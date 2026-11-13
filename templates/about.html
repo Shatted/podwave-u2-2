@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}Acerca del proyecto — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+
+      <p class="hero-eyebrow">Acerca de este proyecto</p>
+      <h1 class="section-title mb-4">PodWave — Documento de proyecto</h1>
+
+      {# ---------- 1. Problemática ---------- #}
+      <div class="card podwave-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#128269; 1. Problemática</h2>
+          <p>
+            Los creadores de podcasts independientes necesitan un espacio simple para
+            organizar y compartir sus episodios: las plataformas comerciales
+            (<em>Spotify, SoundCloud</em>) exigen registros, priorizan contenido de
+            grandes productoras y no permiten gestionar una biblioteca personal a
+            medida. Por otra parte, una aplicación puramente de front end (como la
+            versión original de PodWave en React) <strong>no puede persistir datos en el
+            servidor</strong>, validar de forma confiable ni distinguir usuarios: todo
+            vive en el navegador de cada visitante y se pierde al limpiar el
+            almacenamiento local.
+          </p>
+          <p class="mb-0">
+            Se necesita un <strong>servicio de streaming de audio del lado del
+            servidor</strong>, donde la biblioteca de pistas, las validaciones y la
+            sesión de cada usuario se gestionen centralizadamente con Django.
+          </p>
+        </div>
+      </div>
+
+      {# ---------- 2. Objetivo general ---------- #}
+      <div class="card podwave-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#127919; 2. Objetivo general</h2>
+          <p>
+            Desarrollar <strong>PodWave</strong>, una plataforma web de streaming de
+            audio (podcasts) construida con <strong>Django 5.2.18</strong> bajo el
+            patrón MVT, que permita a cada usuario autenticado administrar una
+            biblioteca de pistas (agregar, explorar, filtrar por género, editar y
+            eliminar), armar <strong>listas de reproducción propias</strong> con su
+            orden personal y reproducirlas desde un reproductor fijo que continúa
+            sonando durante la navegación, evolucionando en tres etapas durante
+            el semestre: interfaces y datos simulados (UA1), persistencia,
+            sesiones y CRUD completo desde el sitio (UA2) y API REST (UA3).
+          </p>
+        </div>
+      </div>
+
+      {# ---------- 3. Usuarios y roles ---------- #}
+      <div class="card podwave-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#128100; 3. Usuarios y roles previstos</h2>
+          <div class="table-responsive">
+            <table class="table table-dark podwave-table mb-0">
+              <thead>
+                <tr>
+                  <th>Rol</th>
+                  <th>Descripción</th>
+                  <th>Interacciones principales</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Visitante</strong> (sin sesión)</td>
+                  <td>Cualquier persona que llega al sitio.</td>
+                  <td>Explora el inicio, la biblioteca y el detalle de pistas; reproduce
+                      audio; filtra por género; consulta las listas de reproducción
+                      públicas; se registra o inicia sesión.</td>
+                </tr>
+                <tr>
+                  <td><strong>Usuario registrado</strong></td>
+                  <td>Oyente que crea una cuenta (ej. <code>demo</code>).</td>
+                  <td>Todo lo anterior + agregar pistas (subiendo un archivo o una URL)
+                      y armar <strong>sus</strong> listas de reproducción: editar y
+                      eliminar solo lo que él mismo creó (control por dueño).</td>
+                </tr>
+                <tr>
+                  <td><strong>Administrador</strong></td>
+                  <td>Superusuario del sitio (ej. <code>admin</code>).</td>
+                  <td>Gestiona el catálogo completo (géneros, pistas y listas de todos
+                      los usuarios) desde Django Admin (<code>/admin/</code>).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {# ---------- 4. Alcance UA1 + proyección ---------- #}
+      <div class="card podwave-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#129517; 4. Alcance de la primera etapa y proyección</h2>
+          <p class="mb-3">
+            La primera versión navegable se concentró en la configuración de Django,
+            el flujo <strong>URL &rarr; View &rarr; Template</strong>, la cobertura de
+            interfaces para los roles previstos y la navegación coherente, con datos
+            de demostración definidos como <strong>estructuras de Python</strong> en
+            <code>podwave/datos_simulados.py</code> (listas de diccionarios y tuplas)
+            que llegan a las plantillas mediante el contexto de las vistas.
+          </p>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="p-3 rounded scope-box scope-u1">
+                <h3 class="h6 mb-2">UA1 — Implementado</h3>
+                <ul class="mb-0 small">
+                  <li>Proyecto Django 5.2 reproducible (venv + requirements).</li>
+                  <li>Apps propias: <code>podwave</code>, <code>pages</code>, <code>accounts</code>.</li>
+                  <li>URLs, Views y Templates con herencia de <code>base.html</code>.</li>
+                  <li>Interfaces: inicio, biblioteca (con filtro por género), detalle,
+                      formulario, confirmación de borrado, login y registro.</li>
+                  <li>Datos simulados con estructuras de Python + contexto.</li>
+                  <li>Archivos estáticos organizados (CSS, JS, imágenes).</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded scope-box scope-u2">
+                <h3 class="h6 mb-2">UA2 — Implementado (etapas 1 y 2)</h3>
+                <ul class="mb-0 small">
+                  <li>Modelos <code>Genre</code>, <code>Track</code>, <code>Playlist</code>,
+                      <code>PlaylistTrack</code> + MySQL (migraciones con datos).</li>
+                  <li>CRUD completo desde el sitio de <strong>pistas y listas</strong>
+                      (vistas genéricas), sin depender del Admin.</li>
+                  <li>Gestión de pistas dentro de la lista: agregar, quitar y
+                      reordenar (N:M con orden).</li>
+                  <li>Sesiones: login/logout/registro + control de acceso
+                      <strong>por dueño</strong> (404 a quien no lo es).</li>
+                  <li>Formularios con validación de servidor y mensajes de
+                      confirmación/error (crispy + Bootstrap 5).</li>
+                  <li>Django Admin + archivos de audio subidos (media files).</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded scope-box scope-u3">
+                <h3 class="h6 mb-2">UA3 — Proyectado</h3>
+                <ul class="mb-0 small">
+                  <li>API REST con Django REST Framework.</li>
+                  <li>Serializers y endpoints JSON.</li>
+                  <li>CRUD REST.</li>
+                  <li>Autenticación por token/JWT.</li>
+                  <li>Seguridad a nivel de API.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <p class="small text-muted mt-3 mb-0">
+            <strong>Fuera del alcance de esta entrega:</strong> reproducción con cola
+            de pistas, marcadores de favoritos, búsqueda de texto completo, comentarios,
+            estadísticas de escucha, carga por lotes y API pública — se incorporarán
+            en etapas posteriores del mismo proyecto.
+          </p>
+        </div>
+      </div>
+
+      {# ---------- 5. Migración React -> Django ---------- #}
+      <div class="card podwave-card mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#128640; 5. Migración Front End &rarr; Back End</h2>
+          <div class="table-responsive">
+            <table class="table table-dark podwave-table mb-0">
+              <thead>
+                <tr>
+                  <th>Aspecto</th>
+                  <th>SPA original (React + Vite)</th>
+                  <th>Proyecto actual (Django 5.2)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Persistencia</td>
+                  <td>Local Storage (navegador)</td>
+                  <td>Base de datos MySQL + ORM (UA2) sobre datos simulados de UA1</td>
+                </tr>
+                <tr>
+                  <td>CRUD</td>
+                  <td>Estado de React (useState/useEffect)</td>
+                  <td>Vistas genéricas: ListView, DetailView, CreateView, UpdateView, DeleteView</td>
+                </tr>
+                <tr>
+                  <td>Validaciones</td>
+                  <td>validators.js (JavaScript)</td>
+                  <td>TrackForm + validaciones del servidor (forms.py)</td>
+                </tr>
+                <tr>
+                  <td>Autenticación</td>
+                  <td>No tenía</td>
+                  <td>Login / Logout / Registro + sesiones (LoginRequiredMixin)</td>
+                </tr>
+                <tr>
+                  <td>Plantillas</td>
+                  <td>Componentes JSX</td>
+                  <td>Lenguaje de plantillas Django (herencia de base.html)</td>
+                </tr>
+                <tr>
+                  <td>Reproductor</td>
+                  <td>Player.jsx (componente persistente)</td>
+                  <td>player.js vanilla + sessionStorage (recuerdo de pista y minuto)</td>
+                </tr>
+                <tr>
+                  <td>Administración</td>
+                  <td>No tenía</td>
+                  <td>Django Admin (/admin/)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {# ---------- 6. Arquitectura MVT ---------- #}
+      <div class="card podwave-card">
+        <div class="card-body">
+          <h2 class="h5 mb-3">&#129302; 6. Arquitectura MVT</h2>
+          <p class="mb-2">
+            Django sigue el patrón <strong>Modelo &middot; Vista &middot; Plantilla</strong>
+            (MVT), su versión del clásico MVC:
+          </p>
+          <ul class="mb-0">
+            <li><strong>Modelo</strong> (<code>podwave/models.py</code>): define las tablas de la base de datos: <code>Genre</code>, <code>Track</code>, <code>Playlist</code> y <code>PlaylistTrack</code> (N:M con orden).</li>
+            <li><strong>Vista</strong> (<code>podwave/views.py</code>): lógica de petición-respuesta y CRUD de pistas y listas.</li>
+            <li><strong>Plantilla</strong> (<code>templates/</code>): HTML con herencia y etiquetas de plantilla.</li>
+            <li><strong>URLs</strong> (<code>urls.py</code>): enrutamiento de cada vista a su ruta.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

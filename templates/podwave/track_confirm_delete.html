@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar pista — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card podwave-card border-danger-subtle">
+        <div class="card-body p-4 text-center">
+          <p class="empty-icon text-danger" aria-hidden="true">&#9888;</p>
+          <h1 class="section-title mb-2">Eliminar pista</h1>
+          <p class="mb-1">
+            ¿Eliminar la pista <strong>&laquo;{{ track.title }}&raquo;</strong>
+            de <strong>{{ track.artist }}</strong>?
+          </p>
+          <p class="text-muted small mb-4">
+            Esta acción no se puede deshacer. La pista se borrará de la base de datos.
+          </p>
+
+          {# Confirmación antes de eliminar (equivalente al window.confirm de la SPA) #}
+          <form method="post" class="d-flex justify-content-center gap-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a href="{% url 'track_detail' track.pk %}" class="btn btn-ghost">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

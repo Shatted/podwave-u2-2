@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Iniciar sesión — PodWave{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card podwave-card">
+        <div class="card-body p-4">
+          <h1 class="section-title mb-1 text-center">Iniciar sesión</h1>
+          <p class="text-muted text-center mb-4">
+            Accede para gestionar tu biblioteca de podcasts.
+          </p>
+
+          {# Mensajes de error de autenticación (LoginView) #}
+          {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              Usuario o contraseña incorrectos. Inténtalo de nuevo.
+            </div>
+          {% endif %}
+
+          {# LoginView incorporado de Django (Unidad 2) #}
+          <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit" class="btn btn-accent w-100 mt-3">Entrar</button>
+          </form>
+
+          <p class="text-center text-muted small mt-4 mb-0">
+            ¿No tienes cuenta?
+            <a href="{% url 'signup' %}" class="text-accent">Regístrate aquí</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

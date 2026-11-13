@@ -1,0 +1,628 @@
+/* ============================================================
+   PodWave — Estilos del proyecto Django
+   Tema oscuro tipo Spotify/SoundCloud con acento verde,
+   migrado desde la SPA React (src/index.css) y adaptado sobre
+   Bootstrap 5 (static files a nivel de proyecto, Unidad 2).
+   ============================================================ */
+
+:root {
+  /* Paleta (idéntica al proyecto original) */
+  --bg-app: #0b0f17;
+  --bg-surface: #121826;
+  --bg-surface-2: #1a2233;
+  --bg-elevated: #232c40;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --accent: #1db954;
+  --accent-hover: #1ed760;
+  --accent-soft: rgba(29, 185, 84, 0.15);
+
+  --danger: #ef4444;
+  --danger-hover: #f87171;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Base ---------- */
+.podwave-body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+.podwave-main { flex: 1 0 auto; }
+
+a { text-decoration: none; }
+
+.text-accent { color: var(--accent) !important; }
+
+/* ---------- Navbar ---------- */
+.podwave-navbar {
+  background: rgba(11, 15, 23, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.podwave-brand {
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  color: var(--text-primary) !important;
+}
+
+.brand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #1db954, #0e7a38);
+  color: #0f172a;
+  font-size: 1.1rem;
+}
+
+.podwave-badge {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.podwave-navbar .nav-link {
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.podwave-navbar .nav-link:hover,
+.podwave-navbar .nav-link:focus {
+  color: var(--text-primary);
+}
+
+.podwave-toggler { border-color: var(--border-strong); }
+
+.podwave-dropdown {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.podwave-dropdown .dropdown-item { color: var(--text-secondary); }
+.podwave-dropdown .dropdown-item:hover {
+  background: var(--accent-soft);
+  color: var(--text-primary);
+}
+.podwave-dropdown .dropdown-header { color: var(--text-muted); }
+
+/* Formulario de "Cerrar sesión" (POST) dentro del dropdown: sin márgenes,
+   el botón se comporta como cualquier dropdown-item. */
+.podwave-dropdown form { margin: 0; }
+
+.user-dot { opacity: 0.85; }
+
+/* ---------- Botones ---------- */
+.btn-accent {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #052313;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-accent:hover, .btn-accent:focus {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #052313;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+}
+
+.btn-ghost:hover, .btn-ghost:focus {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.btn-danger {
+  background: var(--danger);
+  border: 1px solid var(--danger);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.btn-danger:hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+
+/* ---------- Hero (portada) ---------- */
+.hero {
+  padding: 4.5rem 1rem 2.5rem;
+  background:
+    radial-gradient(1200px 400px at 50% -10%, rgba(29, 185, 84, 0.18), transparent),
+    var(--bg-app);
+}
+
+.hero-eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.hero-text {
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  font-size: 1.05rem;
+}
+
+/* ---------- Tarjetas de estadísticas ---------- */
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1rem;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* ---------- Secciones ---------- */
+.section-title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* ---------- Tarjeta de pista (equivale a TrackCard.jsx) ---------- */
+.track-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.track-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.track-thumb {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #1db954, #0e7a38);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.track-thumb-lg { width: 76px; height: 76px; flex-basis: 76px; font-size: 2rem; }
+
+.track-body { flex: 1 1 auto; min-width: 0; }
+
+.track-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-link { color: var(--text-primary); }
+.track-link:hover { color: var(--accent); }
+
+.track-artist {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-genre {
+  display: inline-block;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+
+.track-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+/* ---------- Insignia de fuente de audio (archivo local vs enlace) ---------- */
+.source-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  margin-right: 0.5rem;
+}
+
+.source-local {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.source-external {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+/* Guía de opciones (archivo/URL) en el formulario de pista. */
+.source-hint {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1.1rem;
+}
+
+/* ---------- Filtro por género (datos simulados U1 via contexto) ---------- */
+.genre-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.genre-chip {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.genre-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.genre-chip-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #052313;
+}
+
+/* ---------- Cajas de alcance por unidad (Acerca de) ---------- */
+.scope-box {
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  height: 100%;
+}
+
+.scope-box h3 {
+  letter-spacing: 0.02em;
+}
+
+.scope-u1 h3 { color: var(--accent); }
+.scope-u2 h3 { color: #7dd3fc; }
+.scope-u3 h3 { color: var(--text-muted); }
+
+.scope-box ul {
+  padding-left: 1.1rem;
+}
+
+.scope-box li {
+  color: var(--text-secondary);
+  margin-bottom: 0.3rem;
+}
+
+/* ---------- Detalle ---------- */
+.track-detail dl dt { color: var(--text-muted); font-weight: 600; }
+.track-detail dd { color: var(--text-secondary); }
+
+.breadcrumb-item a { color: var(--text-muted); }
+.breadcrumb-item a:hover { color: var(--accent); }
+.breadcrumb-item.active { color: var(--text-secondary); }
+
+/* ---------- Tarjetas genéricas ---------- */
+.podwave-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.podwave-card .card-body { color: var(--text-secondary); }
+.podwave-card h1, .podwave-card h2, .podwave-card h3 { color: var(--text-primary); }
+.podwave-card p { color: var(--text-muted); }
+.podwave-card strong { color: var(--text-secondary); }
+.podwave-card ul li { color: var(--text-muted); margin-bottom: 0.35rem; }
+.podwave-card code { background: var(--bg-elevated); color: var(--accent); }
+
+.podwave-table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+.podwave-table thead th { color: var(--text-primary); }
+
+/* ---------- Estado vacío ---------- */
+.empty-state {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 3rem 1.5rem;
+}
+
+.empty-state h2 { color: var(--text-primary); font-weight: 700; }
+.empty-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 0.5rem; }
+
+/* ---------- Formularios (crispy-forms + Bootstrap 5) ---------- */
+.podwave-card .form-label,
+.track-form .form-label { color: var(--text-primary); font-weight: 600; }
+
+.form-control, .form-select {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+}
+
+.form-control:focus, .form-select:focus {
+  background: var(--bg-surface-2);
+  border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.2rem var(--accent-soft);
+}
+
+.form-control::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+.form-text { color: var(--text-muted); }
+
+.invalid-feedback { color: var(--danger-hover); }
+
+.alert-danger {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger-hover);
+}
+
+/* ---------- Paginación ---------- */
+.pagination .page-link {
+  background: var(--bg-surface);
+  border-color: var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.pagination .page-link:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #052313;
+}
+
+/* ---------- Footer ---------- */
+.podwave-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Player fijo (equivale a Player.jsx) ---------- */
+.podwave-player {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1040;
+  background: rgba(18, 24, 38, 0.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-strong);
+  padding: 0.6rem 0;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.player-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.player-info { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+
+.player-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #1db954, #0e7a38);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.player-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-artist {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 auto;
+  max-width: 520px;
+}
+
+.player-btn {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.player-btn-play {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #052313;
+  font-size: 1rem;
+}
+
+.player-btn-play:hover { background: var(--accent-hover); }
+
+/* Aviso de autoplay bloqueado: etiqueta FLOTANTE por encima del player.
+   Es position:absolute, por lo que NO ocupa espacio en la fila de
+   controles y nunca aplasta la barra de progreso. */
+.player-hint {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  white-space: nowrap;
+  max-width: 90vw;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  animation: player-hint-pulse 1.6s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes player-hint-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* En pantallas angostas el texto puede envolver para no desbordar. */
+@media (max-width: 575.98px) {
+  .player-hint { white-space: normal; text-align: center; }
+}
+
+.player-btn-close:hover { border-color: var(--danger); color: var(--danger-hover); }
+
+.player-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+}
+
+.player-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.player-bar {
+  flex: 1 1 auto;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.player-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  border-radius: 999px;
+  transition: width 0.25s linear;
+}
+
+/* Deja espacio al contenido para que el player fijo no lo tape. */
+body:has(.podwave-player:not([hidden])) .podwave-footer { margin-bottom: 64px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+  .player-meta { max-width: 110px; }
+  .hero { padding-top: 3rem; }
+}
